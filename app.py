@@ -67,7 +67,7 @@ else:
         else:
             st.markdown("💧 **Manual Watering**")
             water_amount = st.slider("Select amount of water to send (ml)", 50, 500, 200)
-            if st.button(“Time for a splash 💦”:
+            if st.button( "Time for a splash 💦" ):             
                 st.success(f"🌊 {water_amount}ml of water sent to {plant_name}!")
     elif moisture_level < 70:
         st.info("😊 Soil moisture is in a good range.")
