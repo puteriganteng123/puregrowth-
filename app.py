@@ -52,7 +52,7 @@ else:
     st.markdown("---")
     moisture_level = st.slider("📊 Soil Moisture Level (%)", 0, 100, 50)
 
-    st.markdown("🛠 Sensor reading received from Arduino R4 WiFi.")
+    st.markdown("🛠 Sensor reading received from Arduino uno R4 WiFi.")
 
     if moisture_level < 30:
         st.error("⚠️ Soil is too dry.")
@@ -67,7 +67,7 @@ else:
         else:
             st.markdown("💧 **Manual Watering**")
             water_amount = st.slider("Select amount of water to send (ml)", 50, 500, 200)
-            if st.button("Siram Sekarang"):
+            if st.button(“Time for a splash 💦”:
                 st.success(f"🌊 {water_amount}ml of water sent to {plant_name}!")
     elif moisture_level < 70:
         st.info("😊 Soil moisture is in a good range.")
