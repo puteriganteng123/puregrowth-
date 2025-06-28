@@ -2,7 +2,12 @@ import streamlit as st
 import time
 
 # Page config
-st.set_page_config(page_title="Puregrowth", page_icon="🌱", layout="centered")
+st.set_page_config(
+    page_title="Puregrowth",
+    page_icon="https://i.imgur.com/kqYJzjX.png",
+    layout="centered"
+)
+
 
 # Styling
 st.markdown("""
