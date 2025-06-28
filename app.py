@@ -41,7 +41,8 @@ if not st.session_state.registered:
             st.session_state.registered = True
             st.success("Registered successfully! 🌱")
             time.sleep(1)
-            st.experimental_rerun()
+            st.rerun()
+
 else:
     st.success(f"Welcome back, {st.session_state.username}!")
     plant_name = st.text_input("🌼 Name your plant:", "My Little Greeny")
@@ -52,7 +53,7 @@ else:
     st.markdown("---")
     moisture_level = st.slider("📊 Soil Moisture Level (%)", 0, 100, 50)
 
-    st.markdown("🛠 Sensor reading received from Arduino uno R4 WiFi.")
+    st.markdown("🛠 Sensor reading received from Arduino Uno R4 WiFi.")
 
     if moisture_level < 30:
         st.error("⚠️ Soil is too dry.")
