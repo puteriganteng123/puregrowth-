@@ -1,4 +1,5 @@
 import streamlit as st
+import requests
 import time
 
 # Page config
@@ -7,7 +8,6 @@ st.set_page_config(
     page_icon="https://i.imgur.com/kqYJzjX.png",
     layout="centered"
 )
-
 
 # Styling
 st.markdown("""
@@ -26,6 +26,10 @@ st.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
+
+# Firebase URLs
+moisture_url = "https://puregrowth-31987-default-rtdb.asia-southeast1.firebasedatabase.app/moisture.json"
+command_url = "https://puregrowth-31987-default-rtdb.asia-southeast1.firebasedatabase.app/command.json"
 
 # Register/Login Section
 st.title("🌿 Welcome to Puregrowth")
@@ -47,36 +51,39 @@ if not st.session_state.registered:
             st.success("Registered successfully! 🌱")
             time.sleep(1)
             st.rerun()
-
 else:
     st.success(f"Welcome back, {st.session_state.username}!")
     plant_name = st.text_input("🌼 Name your plant:", "My Little Greeny")
 
     st.markdown(f"##### Hello, {st.session_state.username} 👋")
     st.markdown(f"**'{plant_name}'** is waiting for your care 💧")
-
     st.markdown("---")
-    moisture_level = st.slider("📊 Soil Moisture Level (%)", 0, 100, 50)
+
+    # Get real moisture level from Firebase
+    try:
+        moisture_level = int(requests.get(moisture_url).text)
+    except:
+        moisture_level = 0
 
     st.markdown("🛠 Sensor reading received from Arduino Uno R4 WiFi.")
+    st.markdown(f"📊 **Soil Moisture Level**: `{moisture_level}`")
 
-    import requests
+    if moisture_level < 30:
+        st.error("⚠️ Soil is too dry.")
+        st.info("A notification has been sent to your phone 📲")
 
-moisture_url = "https://puregrowth-31987-default-rtdb.asia-southeast1.firebasedatabase.app/moisture.json"
-
-try:
-    moisture_level = int(requests.get(moisture_url).text)
-except:
-    moisture_level = 0        ignore = st.checkbox("Ignore notification")
+        ignore = st.checkbox("Ignore notification")
 
         if ignore:
             st.warning("⏳ Waiting 5 minutes before automatic watering...")
-            time.sleep(2)  # simulate time delay
+            time.sleep(2)
             st.success("✅ Automatic watering triggered 💦")
+            requests.put(command_url, data='"water_now"')
         else:
             st.markdown("💧 **Manual Watering**")
             water_amount = st.slider("Select amount of water to send (ml)", 50, 500, 200)
-            if st.button( "Time for a splash 💦" ):             
+            if st.button("Time for a splash 💦"):
+                requests.put(command_url, data='"water_now"')
                 st.success(f"🌊 {water_amount}ml of water sent to {plant_name}!")
     elif moisture_level < 70:
         st.info("😊 Soil moisture is in a good range.")
