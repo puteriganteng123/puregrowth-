@@ -60,11 +60,14 @@ else:
 
     st.markdown("🛠 Sensor reading received from Arduino Uno R4 WiFi.")
 
-    if moisture_level < 30:
-        st.error("⚠️ Soil is too dry.")
-        st.info("A notification has been sent to your phone 📲")
+    import requests
 
-        ignore = st.checkbox("Ignore notification")
+moisture_url = "https://puregrowth-31987-default-rtdb.asia-southeast1.firebasedatabase.app/moisture.json"
+
+try:
+    moisture_level = int(requests.get(moisture_url).text)
+except:
+    moisture_level = 0        ignore = st.checkbox("Ignore notification")
 
         if ignore:
             st.warning("⏳ Waiting 5 minutes before automatic watering...")
